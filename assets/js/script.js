@@ -85,20 +85,20 @@ var quizBegin = function () {
 var quizQuestion = function () {
     //Pull question from array
     var currentQuestion = questionsBank[currentQuestionIndex];
-    //Update h1 with current question
     var choices = document.getElementById("question");
-    choices.textContent = currentQuestion.question;
     // Clear choices
     choices.innerHTML = "";
+    //Update h1 with current question
+    choices.textContent = currentQuestion.question;
 
     //loop over questionBank
     currentQuestion.choices.forEach(function(bank, i) {
         //generating question choices
         var bankOption = document.createElement("button");
         bankOption.setAttribute("class", "bank btn choice");
-        bankOption.setAttribute("value", bank);
+        bankOption.setAttribute("value", bank.choice);
 
-        bankOption.textContent = i + 1 + ". " + bank ;
+        bankOption.textContent = bank.choice ;
         //click event for question choices
         bankOption.onclick = checkAns;
 
