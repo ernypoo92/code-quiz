@@ -101,7 +101,7 @@ var quizQuestion = function () {
         bankOption.textContent = bank.choice ;
         //click event for question choices
         bankOption.onclick = checkAns;
-
+        
         //list choices on screen
         choices.appendChild(bankOption);
     });
@@ -109,8 +109,18 @@ var quizQuestion = function () {
 };
 
 //Listen for choice
-var checkAns = function () {
+var checkAns = function (event) {
+    var currentQuestion = questionsBank[currentQuestionIndex];
+
     //Check if choice is correct
+    var currentAns = currentQuestion.answer;
+    var correctAns = event.target.textContent
+
+    if (currentAns === correctAns) {
+        console.log("correct");
+    }else{
+        console.log('incorrect')
+    }
     //Feedback CORRECT or INCORRECT for 2.5 sec
     //If incorrect then -10 sec
 
