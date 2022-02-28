@@ -13,6 +13,8 @@ var highScores = document.getElementById("high-scores");
 var feedbackDiv = document.getElementById("feedback-div");
 var feedback = document.getElementById("feedback");
 var currentQuestionIndex = 0;
+var totalTime = 120;
+var score = 0;
 
 // The array of questions, choices and correct answers.
 const questionsBank= [
@@ -50,8 +52,7 @@ const questionsBank= [
 
 // Start Timer
 function countdown () {
-    var totalTime = 90;
-    
+        
     var timeInterval = setInterval(function() {
         // As long as the `timeLeft` is greater than 1
         if (totalTime > 1) {
@@ -69,6 +70,7 @@ function countdown () {
             // Use `clearInterval()` to stop the timer
             clearInterval(timeInterval);
             // Call the `endQuiz()` function
+            quizEnd();
             console.log(time)
         }
     }, 1000)
@@ -81,15 +83,17 @@ var quizBegin = function () {
     countdown ();
     quizQuestion ();
 };
+
 //Repeat 7 times
 var quizQuestion = function () {
     //Pull question from array
     var currentQuestion = questionsBank[currentQuestionIndex];
-    var choices = document.getElementById("question");
-    // Clear choices
+    var choices = document.getElementById("choices");
+    // Clear question and choices
+    question.innerHTML = "";
     choices.innerHTML = "";
     //Update h1 with current question
-    choices.textContent = currentQuestion.question;
+    question.textContent = currentQuestion.question;
 
     //loop over questionBank
     currentQuestion.choices.forEach(function(bank, i) {
@@ -115,43 +119,77 @@ var checkAns = function (event) {
     //Check if choice is correct
     var currentAns = currentQuestion.answer;
     var correctAns = event.target.textContent
+    var feedbackTime = 4
 
     if (currentAns === correctAns) {
-        console.log("correct");
+        feedback.textContent=("Correct!");
+        //Increase score by 10.89756 points
+        score = score + 10.89756;
     }else{
-        console.log('incorrect')
+        feedback.textContent=('Incorrect');
+        //If incorrect then -10 sec
+        totalTime = totalTime-10;
     }
     //Feedback CORRECT or INCORRECT for 2.5 sec
-    //If incorrect then -10 sec
+    var feedbackTimer = setInterval( function() {
+        //If 'feedbackTime' is 
+        if (feedbackTime > 0) {
+            // Decrement `feedbackTime` by 1
+            feedbackTime--;
+        }
+        // When `feedbackTime` is less than or equal to 0 then the H1 is cleared
+        else {
+            // Set the `textContent` of `feedback` to an empty string
+            feedback.textContent=("");
+            // Use `clearInterval()` to stop the timer
+            clearInterval(feedbackTimer);
+
+        }
+    }, 1000);
+    //Chck is quiz is ended
+    quizEnd();
+};
+
+var quizEnd = function () {
+    //Check if time remains or if questions are done
+    if (totalTime <= 0 || currentQuestionIndex >= 6 ) {
+        // Use `clearInterval()` to stop the timer
+        clearInterval(timeInterval);
+        //If quiz ends then call logScore()
+        logScore();
+    }
+    else {
+        currentQuestionIndex++;
+        quizQuestion();
+    }
+    
+    console.log (currentQuestionIndex)
+    
+};
+
+var logScore = function () {
+    //Hide questions and reveal end-of-quiz
+    questions.classList.add("hidden");
+    endQuiz.classList.remove("hidden")
+    //button listener
+    //verify name input
+    //send name to storage
+    //got to highScore
 
 }
-    //Remove question
-    //Check if time remains
-    //If quiz ends then quizEnd
-    
-    var quizEnd = function () {
-        //hide questions
-        //reveal end-of-quiz
-        //button listener
-        // verify name input
-        //send name to storage
-        //got to highScore
-        
-        
-    };
-    
-    var highScore = function () {
-        //pull from array storage
-        //arrange from high to low score
-        //display scores
-        //listen for button
-        //go to quizBegin
-    };
-    
-    const startScreen = function() {
-        highScores.classList.add("hidden");
-        main.classList.remove("hidden");
-        startQuiz.classList.remove("hidden");
-    };
-    
+
+var highScore = function () {
+    //pull from array storage
+    //arrange from high to low score
+    //display scores
+    //listen for button
+    //go to quizBegin
+};
+
+const startScreen = function() {
+    highScores.classList.add("hidden");
+    main.classList.remove("hidden");
+    startQuiz.classList.remove("hidden");
+};
+
 startBtn.addEventListener("click", quizBegin);
