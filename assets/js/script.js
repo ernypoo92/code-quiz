@@ -154,7 +154,7 @@ var quizEnd = function () {
     //Check if time remains or if questions are done
     if (totalTime <= 0 || currentQuestionIndex >= 6 ) {
         // Use `clearInterval()` to stop the timer
-        clearInterval(timeInterval);
+        // clearInterval(timeInterval);
         //If quiz ends then call logScore()
         logScore();
     }
@@ -170,9 +170,16 @@ var quizEnd = function () {
 var logScore = function () {
     //Hide questions and reveal end-of-quiz
     questions.classList.add("hidden");
-    endQuiz.classList.remove("hidden")
+    endQuiz.classList.remove("hidden");
+
+    var name = getElementById("name")
     //button listener
+    var HSInput = getElementById("HSInput");
+    HSInput.addEventListener("click", verifyName);
     //verify name input
+    if (name = ""){
+        window.prompt ("Your high score name cannot be empty. Please enter a name.")
+    }
     //send name to storage
     //got to highScore
 
