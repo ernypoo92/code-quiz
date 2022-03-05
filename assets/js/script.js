@@ -8,10 +8,12 @@ var questions = document.getElementById("questions");
 var question = document.getElementById("question");
 var choices = document.getElementById("choices");
 var endQuiz = document.getElementById("end-of-quiz");
-var name = document.getElementById("name");
+var nameInput = document.getElementById("name");
+var HSSaveBtn = document.getElementById("hsSaveBtn");
 var highScores = document.getElementById("high-scores");
 var feedbackDiv = document.getElementById("feedback-div");
 var feedback = document.getElementById("feedback");
+// Quiz State Variables
 var currentQuestionIndex = 0;
 var totalTime = 120;
 var score = 0;
@@ -153,8 +155,8 @@ var checkAns = function (event) {
 var quizEnd = function () {
     //Check if time remains or if questions are done
     if (totalTime <= 0 || currentQuestionIndex >= 6 ) {
-        // Use `clearInterval()` to stop the timer
-        // clearInterval(timeInterval);
+        // Set totalTime to 0 to stop the timer
+        totalTime = 0;
         //If quiz ends then call logScore()
         logScore();
     }
@@ -167,25 +169,33 @@ var quizEnd = function () {
     
 };
 
-var logScore = function () {
+var logScore = function (name, score) {
     //Hide questions and reveal end-of-quiz
     questions.classList.add("hidden");
     endQuiz.classList.remove("hidden");
 
-    var name = getElementById("name")
-    //button listener
-    var HSInput = getElementById("HSInput");
-    HSInput.addEventListener("click", verifyName);
-    //verify name input
-    if (name = ""){
-        window.prompt ("Your high score name cannot be empty. Please enter a name.")
-    }
-    //send name to storage
-    //got to highScore
+    
+    HSSaveBtn.addEventListener("click", function() {
+        //verify name input
+        if (hsName = ""){
+            window.prompt ("Your high score name cannot be empty. Please enter a name.")
+        }
+        else {
+            //send name to storage
+            var highScore = {
+                name: nameInput.value.trim(),
+                score: score.value
+            }
+            console.log (highScore)
+            //got to highScore
+            
+        }
+    
+    });
 
 }
 
-var highScore = function () {
+var highScoreScreen = function () {
     //pull from array storage
     //arrange from high to low score
     //display scores
