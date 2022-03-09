@@ -10,7 +10,7 @@ var choices = document.getElementById("choices");
 var endQuiz = document.getElementById("end-of-quiz");
 var nameInput = document.getElementById("name");
 var HSSaveBtn = document.getElementById("hsSaveBtn");
-var highScores = document.getElementById("high-scores");
+var highScoresPage = document.getElementById("high-scores");
 var feedbackDiv = document.getElementById("feedback-div");
 var feedback = document.getElementById("feedback");
 // Quiz State Variables
@@ -111,22 +111,23 @@ var quizQuestion = function () {
         //list choices on screen
         choices.appendChild(bankOption);
     });
-
+    
 };
 
 //Listen for choice
 var checkAns = function (event) {
+    console.log (score)
     var currentQuestion = questionsBank[currentQuestionIndex];
-
+    
     //Check if choice is correct
     var currentAns = currentQuestion.answer;
     var correctAns = event.target.textContent
     var feedbackTime = 4
-
+    
     if (currentAns === correctAns) {
         feedback.textContent=("Correct!");
-        //Increase score by 10.89756 points
-        score = score + 10.89756;
+        //Increase score by 10 points
+        score = score + 10;
     }else{
         feedback.textContent=('Incorrect');
         //If incorrect then -10 sec
@@ -145,7 +146,7 @@ var checkAns = function (event) {
             feedback.textContent=("");
             // Use `clearInterval()` to stop the timer
             clearInterval(feedbackTimer);
-
+            
         }
     }, 1000);
     //Chck is quiz is ended
@@ -155,49 +156,81 @@ var checkAns = function (event) {
 var quizEnd = function () {
     //Check if time remains or if questions are done
     if (totalTime <= 0 || currentQuestionIndex >= 6 ) {
+        // If user gets 100% add the remaining time to their score
+        if(score >= 70){
+            score = score + totalTime;
+            console.log(score);
+        }
         // Set totalTime to 0 to stop the timer
         totalTime = 0;
         //If quiz ends then call logScore()
-        logScore();
+        revealLogScore();
     }
     else {
         currentQuestionIndex++;
         quizQuestion();
     }
     
-    console.log (currentQuestionIndex)
     
 };
 
-var logScore = function (name, score) {
+const revealLogScore = function() {
     //Hide questions and reveal end-of-quiz
     questions.classList.add("hidden");
     endQuiz.classList.remove("hidden");
+    var hsText = document.getElementById("hs-text")
+    hsText.innerHTML = "You got a score of "+score+".";
+    logScore();
+};
 
+var logScore = function () {
     
     HSSaveBtn.addEventListener("click", function() {
         //verify name input
-        if (hsName = ""){
+        if (nameInput === ""){
             window.prompt ("Your high score name cannot be empty. Please enter a name.")
         }
         else {
             //send name to storage
-            var highScore = {
+            var highScoreLog = {
                 name: nameInput.value.trim(),
-                score: score.value
+                score: score
             }
-            console.log (highScore)
-            //got to highScore
+            console.log (highScoreLog)
             
+            // get saved scores from local storage, or if not any, set to empty array
+            var highscores =
+            JSON.parse(window.localStorage.getItem("highscores")) || [];
+
+            // save to localstorage
+            highscores.push(highScoreLog);
+            window.localStorage.setItem("highscores", JSON.stringify(highscores));
+
+            //go to highScore
+            revealHighScoreScreen()
         }
     
     });
+}
 
+var revealHighScoreScreen = function () {
+    main.classList.add("hidden");
+    endQuiz.classList.add("hidden");
+    highScoresPage.classList.remove("hidden");
+    highScoreScreen();
 }
 
 var highScoreScreen = function () {
     //pull from array storage
+    var loadHighScores = localStorage.getItem ("highscores");
     //arrange from high to low score
+    function loadHighScores(loadHighScores) {
+        loadHighScores = JSON.stringify(loadHighScores);
+        loadHighScores.sort(function(a,b){
+            return a.score - b.score;
+        });
+    }
+    console.log (loadHighScores);
     //display scores
     //listen for button
     //go to quizBegin
