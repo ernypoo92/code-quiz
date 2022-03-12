@@ -114,7 +114,8 @@ ol {
     background-color: var(--primary-color);
     color: var(--btn-text-color);
     border: none;
-    padding: 8px 20px;
+    padding: 10px 22px;
+    margin: 12px;
     font-size: 28px;
     border-radius: 10px;
 }
@@ -125,7 +126,8 @@ ol {
 }
 
 .btn:hover {
-    padding: 9px 21px;
+    padding: 12px 24px;
+    margin: 10px;
 }
 
 
