@@ -11,6 +11,8 @@ var endQuiz = document.getElementById("end-of-quiz");
 var nameInput = document.getElementById("name");
 var HSSaveBtn = document.getElementById("hsSaveBtn");
 var highScoresPage = document.getElementById("high-scores");
+var highScoreList = document.getElementById("hs-list");
+var returnQuizStart = document.getElementById ("return-quiz-start");
 var feedbackDiv = document.getElementById("feedback-div");
 var feedback = document.getElementById("feedback");
 // Quiz State Variables
@@ -81,6 +83,7 @@ function countdown () {
 
 var quizBegin = function () {
     startQuiz.classList.add("hidden");
+    viewHS.classList.add("hidden");
     questions.classList.remove("hidden");
     countdown ();
     quizQuestion ();
@@ -149,7 +152,7 @@ var checkAns = function (event) {
             
         }
     }, 1000);
-    //Chck is quiz is ended
+    //Check is quiz is ended
     quizEnd();
 };
 
@@ -180,61 +183,69 @@ const revealLogScore = function() {
     endQuiz.classList.remove("hidden");
     var hsText = document.getElementById("hs-text")
     hsText.innerHTML = "You got a score of "+score+".";
-    logScore();
+
 };
 
-var logScore = function () {
-    
-    HSSaveBtn.addEventListener("click", function() {
-        //verify name input
-        if (nameInput === ""){
-            window.prompt ("Your high score name cannot be empty. Please enter a name.")
+HSSaveBtn.addEventListener("click", function() {
+    //verify name input
+    if (nameInput === ""){
+        window.prompt ("Your high score name cannot be empty. Please enter a name.")
+    }
+    else {
+        //send name to storage
+        var highScoreLog = {
+            name: nameInput.value.trim(),
+            score: score
         }
-        else {
-            //send name to storage
-            var highScoreLog = {
-                name: nameInput.value.trim(),
-                score: score
-            }
-            console.log (highScoreLog)
-            
-            // get saved scores from local storage, or if not any, set to empty array
-            var highscores =
-            JSON.parse(window.localStorage.getItem("highscores")) || [];
+        console.log (highScoreLog)
+        
+        // get saved scores from local storage, or if not any, set to empty array
+        var highScores =
+        JSON.parse(window.localStorage.getItem("highScores")) || [];
 
-            // save to localstorage
-            highscores.push(highScoreLog);
-            window.localStorage.setItem("highscores", JSON.stringify(highscores));
+        // save to localStorage
+        highScores.push(highScoreLog);
+        window.localStorage.setItem("highScores", JSON.stringify(highScores));
 
-            //go to highScore
-            revealHighScoreScreen()
-        }
-    
-    });
-}
+        //go to highScore
+        revealHighScoreScreen()
+    }
+
+});
+
 
 var revealHighScoreScreen = function () {
     main.classList.add("hidden");
-    endQuiz.classList.add("hidden");
+    viewHS.classList.add ("hidden");
     highScoresPage.classList.remove("hidden");
+    returnQuizStart.classList.remove("hidden");
     highScoreScreen();
 }
 
 var highScoreScreen = function () {
     //pull from array storage
-    var loadHighScores = localStorage.getItem ("highscores");
+    var loadHighScores = JSON.parse(localStorage.getItem ("highScores"));
     //arrange from high to low score
-    function loadHighScores(loadHighScores) {
-        loadHighScores = JSON.stringify(loadHighScores);
-        loadHighScores.sort(function(a,b){
-            return a.score - b.score;
-        });
-    }
+    loadHighScores.sort(function(a,b){
+        return b.score - a.score;
+    });
     console.log (loadHighScores);
     //display scores
-    //listen for button
-    //go to quizBegin
+    for (var i=0; i<loadHighScores.length; i++) {
+        var listHighScore = document.createElement("li");
+        listHighScore.textContent = loadHighScores[i].name + " - " + loadHighScores[i].score;
+        highScoreList.appendChild(listHighScore);
+        console.log (listHighScore);
+    }
+    //listen for button to go to quizBegin
+    returnQuizStart.addEventListener('click', closeHighScorePage);
 };
+
+//when called the DOM is reloaded resetting all of the hidden presets 
+const closeHighScorePage = () =>{
+    window.location.reload();
+};
+
 
 const startScreen = function() {
     highScores.classList.add("hidden");
@@ -243,3 +254,4 @@ const startScreen = function() {
 };
 
 startBtn.addEventListener("click", quizBegin);
+viewHS.addEventListener("click", revealHighScoreScreen);
