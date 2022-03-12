@@ -1,12 +1,7 @@
 # Java Script Code Quiz
 ## Description
 
-Provide a short description explaining the what, why, and how of your project. Use the following questions as a guide:
-
-- What was your motivation?
-- Why did you build this project? (Note: the answer is not "Because it was a homework assignment.")
-- What problem does it solve?
-- What did you learn?
+The following is a short quiz about Java Script writen in Java Script. This was largley done to improve my abilities and knowlege of Java Scrip and use calback functions and dynamically created elements and I am proud of how it turned out.
 
 ## Installation
 
